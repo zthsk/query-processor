@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Search</title>
+    <style>
+        /* Basic reset for padding and margins */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            display: block; 
+            margin: 0 auto;
+            width: 20%;
+            padding: 10px;
+            background-color: #5D93E1;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #4a7abc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 20px;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Search Local Documents</h1>
+    <form method="POST" action="/search">
+        <input type="text" name="query" placeholder="Enter your query" value="{{ query | default('') }}">
+        <button type="submit">Search</button>
+    </form>
+    {% if searched %}
+        {% if matching_documents %}
+        <div id="matching-documents">
+            <h2>Matching Documents for query: "{{query}}"</h2>
+            <ul>
+                {% for doc_id, filename, weight in matching_documents %}
+                <li> 
+                    DocID: {{ doc_id }} &nbsp;
+                    FileName: <a href="{{ url_for('open_file', filename=filename) }}" target="_blank">{{ filename }}</a> &nbsp;
+                    Weight: {{ weight }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div id="no-documents">
+            <h2>No matching documents for query: "{{ query }}" found!</h2>
+        </div>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
